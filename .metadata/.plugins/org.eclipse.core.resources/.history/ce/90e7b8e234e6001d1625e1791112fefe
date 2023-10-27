@@ -1,0 +1,72 @@
+/*
+ * imu.c
+ *
+ *  Created on: Apr 28, 2023
+ *      Author: muslicb
+ */
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+#include "Timer.h"
+#include "lcd.h"
+#include "open_interface.h"
+#include "uart-interrupt.h"
+#include "ping_template.h"
+#include "servo.h"
+
+#include "bno055.h"
+#include "uart.h"
+#include <stdint.h>
+
+
+
+int main(void) {
+     uart_interrupt_init();
+     oi_t* sensor_data = oi_alloc();  // do this only once at start of main()
+     oi_init(sensor_data);
+     timer_init();
+     uart_init();
+    // timer_init2();
+     servo_init();
+     lcd_init();
+     ping_initalize();
+
+     bno_t *bno = bno_alloc();
+     bno_initCalib(&bno_calibrate);
+
+     oi_t *oi = oi_alloc();
+     oi_init(oi);
+
+     bno_update(bno);
+     float target = bno ->euler.heading / 16.;
+
+     while(1) {
+         oi_update(oi);
+         if(oi -> wheelDropLeft | oi -> wheelDropRight) {
+             oi_setWheels(0,0);
+         }
+         else {
+             bno_update(bno);
+
+             float difference = remainderf(
+                     (target - (bno ->euler.heading / 16.) + 360), 360);
+             difference = difference > 180 ? difference -360 : difference; // If diff > 180, make it negative so math works.
+             difference *= 14; // Faster
+
+             //Ensure within bounds of -100, 100
+             init16_t power = (init16_t) (
+                     difference < -100 ?
+                             -100 : (difference > 100 ? 100 : difference));
+
+             oi_setWheels(-power, power);
+         }
+         timer_waitMillis(10);
+     }
+
+
+    //oi_free(sensor_data);
+}

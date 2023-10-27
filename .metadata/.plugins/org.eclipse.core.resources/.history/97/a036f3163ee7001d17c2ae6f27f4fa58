@@ -1,0 +1,20 @@
+#ifndef MOVEMENT_H
+#define MOVEMENT_H
+
+#include "open_interface.h"
+
+void initialize_system(void);
+void move_forward(oi_t* sensor_data);
+void turn_left(void);
+void move_reverse(void);
+void turn_right(void);
+void begin_scan(void);
+void emergency_brake(void);
+void boost(oi_t* sensor_data);
+void ir_sweep(oi_t* sensor_data);
+
+
+
+// Add other helper function declarations here
+
+#endif // MOVEMENT_H

@@ -1,0 +1,49 @@
+
+**** Build of configuration Debug for project final_project ****
+
+"C:\\ti\\ccs1200\\ccs\\utils\\bin\\gmake" -k -j 20 all -O 
+ 
+Building file: "../main.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --include_path="U:/CprE288Workspace/final_project" --include_path="C:/ti/TivaWare_C_Series-2.2.0.295" --include_path="C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include" --define=ccs="ccs" --define=PART_TM4C123GH6PM -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="main.d_raw"  "../main.c"
+ 
+>> Compilation failure
+subdir_rules.mk:9: recipe for target 'main.obj' failed
+"../main.c", line 38: error #167: too few arguments in function call
+"../main.c", line 42: error #167: too few arguments in function call
+"../main.c", line 46: warning #225-D: function "move_reverse" declared implicitly
+"../main.c", line 50: error #167: too few arguments in function call
+"../main.c", line 58: warning #225-D: function "emergency_brake" declared implicitly
+"../main.c", line 62: warning #225-D: function "boost" declared implicitly
+"../main.c", line 71: warning #225-D: function "ir_ping_scan" declared implicitly
+"../main.c", line 105: warning #112-D: statement is unreachable
+3 errors detected in the compilation of "../main.c".
+gmake: *** [main.obj] Error 1
+Building file: "../commands.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --include_path="U:/CprE288Workspace/final_project" --include_path="C:/ti/TivaWare_C_Series-2.2.0.295" --include_path="C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include" --define=ccs="ccs" --define=PART_TM4C123GH6PM -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="commands.d_raw"  "../commands.c"
+ 
+>> Compilation failure
+subdir_rules.mk:9: recipe for target 'commands.obj' failed
+"../commands.c", line 30: error #148: declaration is incompatible with "double move_forward(oi_t *, double)" (declared at line 10 of "U:/CprE288Workspace/final_project/commands.h")
+"../commands.c", line 46: warning #121-D: return value type does not match the function type
+"../commands.c", line 52: error #20: identifier "bump" is undefined
+"../commands.c", line 70: error #20: identifier "boundary" is undefined
+"../commands.c", line 102: error #20: identifier "cliff" is undefined
+"../commands.c", line 137: error #148: declaration is incompatible with "double turn_right(oi_t *, double)" (declared at line 22 of "U:/CprE288Workspace/final_project/commands.h")
+"../commands.c", line 175: warning #121-D: return value type does not match the function type
+"../commands.c", line 180: error #20: identifier "bump" is undefined
+"../commands.c", line 198: error #20: identifier "boundary" is undefined
+"../commands.c", line 230: error #20: identifier "cliff" is undefined
+"../commands.c", line 362: warning #225-D: function "ir_scan" declared implicitly
+"../commands.c", line 410: warning #225-D: function "ir_scan" declared implicitly
+"../commands.c", line 424: warning #552-D: variable "objects" was set but never used
+"../commands.c", line 538: warning #141-D: too many arguments in function call
+"../commands.c", line 540: error #141: too many arguments in function call
+"../commands.c", line 558: error #141: too many arguments in function call
+"../commands.c", line 561: warning #141-D: too many arguments in function call
+10 errors detected in the compilation of "../commands.c".
+gmake: *** [commands.obj] Error 1
+gmake: Target 'all' not remade because of errors.
+
+**** Build Finished ****

@@ -1,0 +1,19 @@
+
+**** Build of configuration Debug for project PROJECT_DUSK ****
+
+"C:\\ti\\ccs1200\\ccs\\utils\\bin\\gmake" -k -j 20 all -O 
+ 
+Building file: "../commands.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --include_path="U:/CprE288Workspace/PROJECT_DUSK" --include_path="C:/ti/TivaWare_C_Series-2.2.0.295" --include_path="C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include" --define=ccs="ccs" --define=PART_TM4C123GH6PM -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi --preproc_with_compile --preproc_dependency="commands.d_raw"  "../commands.c"
+"../commands.c", line 512: warning #552-D: variable "objects" was set but never used
+Finished building: "../commands.c"
+ 
+Building target: "PROJECT_DUSK.out"
+Invoking: Arm Linker
+"C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C123GH6PM -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"PROJECT_DUSK.map" --heap_size=4096 --stack_size=4096 -i"C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/lib" -i"C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="PROJECT_DUSK_linkInfo.xml" --rom_model -o "PROJECT_DUSK.out" "./Timer.obj" "./adc.obj" "./button.obj" "./calibration.obj" "./commands.obj" "./lcd.obj" "./main.obj" "./open_interface.obj" "./ping_template.obj" "./servo.obj" "./tm4c123gh6pm_startup_ccs.obj" "./uart-interrupt.obj" "./uart.obj" "../tm4c123gh6pm.cmd"  -llibc.a -l"C:/ti/TivaWare_C_Series-2.2.0.295/driverlib/ccs/Debug/driverlib.lib" 
+<Linking>
+Finished building target: "PROJECT_DUSK.out"
+ 
+
+**** Build Finished ****

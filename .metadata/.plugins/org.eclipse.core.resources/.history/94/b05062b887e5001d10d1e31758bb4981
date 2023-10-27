@@ -1,0 +1,21 @@
+/*
+ * @file calibration.c
+ * @author Halle Northway, Micale Robeson, Megan Boyd, Zach Harvey
+ */
+#ifndef CALIBRATE_H_
+#define CALIBRATE_H_
+
+#include <commands.h>
+#include "open_interface.h"
+#include "Timer.h"
+#include "lcd.h"
+#include "servo.h"
+#include "button.h"
+
+/**
+ * Use to calibrate servo.
+ *
+ */
+void calibrate(void);
+
+#endif /* CALIBRATE_H_ */

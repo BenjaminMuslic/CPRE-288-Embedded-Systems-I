@@ -1,0 +1,86 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+SHELL = cmd.exe
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../MAIN.c \
+../Timer.c \
+../adc.c \
+../button.c \
+../calibration.c \
+../commands.c \
+../lcd.c \
+../open_interface.c \
+../ping_template.c \
+../servo.c \
+../uart-interrupt.c 
+
+C_DEPS += \
+./MAIN.d \
+./Timer.d \
+./adc.d \
+./button.d \
+./calibration.d \
+./commands.d \
+./lcd.d \
+./open_interface.d \
+./ping_template.d \
+./servo.d \
+./uart-interrupt.d 
+
+OBJS += \
+./MAIN.obj \
+./Timer.obj \
+./adc.obj \
+./button.obj \
+./calibration.obj \
+./commands.obj \
+./lcd.obj \
+./open_interface.obj \
+./ping_template.obj \
+./servo.obj \
+./uart-interrupt.obj 
+
+OBJS__QUOTED += \
+"MAIN.obj" \
+"Timer.obj" \
+"adc.obj" \
+"button.obj" \
+"calibration.obj" \
+"commands.obj" \
+"lcd.obj" \
+"open_interface.obj" \
+"ping_template.obj" \
+"servo.obj" \
+"uart-interrupt.obj" 
+
+C_DEPS__QUOTED += \
+"MAIN.d" \
+"Timer.d" \
+"adc.d" \
+"button.d" \
+"calibration.d" \
+"commands.d" \
+"lcd.d" \
+"open_interface.d" \
+"ping_template.d" \
+"servo.d" \
+"uart-interrupt.d" 
+
+C_SRCS__QUOTED += \
+"../MAIN.c" \
+"../Timer.c" \
+"../adc.c" \
+"../button.c" \
+"../calibration.c" \
+"../commands.c" \
+"../lcd.c" \
+"../open_interface.c" \
+"../ping_template.c" \
+"../servo.c" \
+"../uart-interrupt.c" 
+
+

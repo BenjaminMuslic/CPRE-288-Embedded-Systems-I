@@ -1,0 +1,30 @@
+# FIXED
+
+draw_text_polar_graph2.obj: ../draw_text_polar_graph2.c
+draw_text_polar_graph2.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/math.h
+draw_text_polar_graph2.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/_ti_config.h
+draw_text_polar_graph2.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/linkage.h
+draw_text_polar_graph2.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/_defs.h
+draw_text_polar_graph2.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/sys/_types.h
+draw_text_polar_graph2.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/sys/cdefs.h
+draw_text_polar_graph2.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/machine/_types.h
+draw_text_polar_graph2.obj: C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/machine/_limits.h
+
+../draw_text_polar_graph2.c:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/math.h:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/_ti_config.h:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/linkage.h:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/_defs.h:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/sys/_types.h:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/sys/cdefs.h:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/machine/_types.h:
+
+C:/ti/ccs1200/ccs/tools/compiler/ti-cgt-arm_20.2.6.LTS/include/machine/_limits.h:
+

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;ROVER_RACERS/commands.c&apos; to &apos;functions.c&apos;" description="Rename resource &apos;commands.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="commands.c" name="functions.c" stamp="1682725793102" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;ROVER_RACERS/commands.h&apos; to &apos;functions.h&apos;" description="Rename resource &apos;commands.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="commands.h" name="functions.h" stamp="1682725804950" updateReferences="true"/>
+</session>

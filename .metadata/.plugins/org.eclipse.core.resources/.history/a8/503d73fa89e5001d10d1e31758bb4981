@@ -1,0 +1,127 @@
+/**
+ * @file main.c
+ * @author Halle Northway, Micale Robeson, Megan Boyd, Zach Harvey
+ */
+
+#include <commands.h>
+#include "lcd.h"
+#include "Timer.h"
+#include "open_interface.h"
+//#include "cyBot_uart.h"
+//#include "cyBot_Scan.h"
+#include "uart-interrupt.h"
+#include "ping_template.h"
+#include <time.h>
+#include <stdbool.h>
+#include "driverlib/interrupt.h"
+#include "button.h"
+#include "servo.h"
+#include "adc.h"
+#include "calibration.h"
+
+int main(void)
+{
+
+    //calibrate();
+
+    // Initialize components.
+    timer_init(); // Must be called before lcd_init(), which uses timer functions.
+    lcd_init();
+    uart_interrupt_init();
+    ping_init();
+    servo_init();
+    adc_init();
+
+    //  Allocate memory for the sensor data.
+    oi_t *sensor_data = oi_alloc();
+
+    oi_init(sensor_data); // Do this only once at start of main().
+
+    // Set robot's wheels to stop.
+    oi_setWheels(0, 0);
+
+    // Loop indefinitely.
+    while (1)
+    {
+        // If UART receives 'w' char, move bot forward.
+        if (command_flag == 2)
+        {
+            command_flag = move_forward_manual(sensor_data);
+        }
+
+        // If UART receives 's' char, move bot backward.
+        if (command_flag == 3)
+        {
+            move_backward_manual(sensor_data);
+            command_flag = 0;
+        }
+
+        // If UART receives 'a' char, turn bot to the left.
+        if (command_flag == 4)
+        {
+            turn_left_manual(sensor_data);
+            command_flag = 0;
+        }
+
+        // If UART receives 'd' char, turn bot to the right.
+        if (command_flag == 5)
+        {
+            turn_right_manual(sensor_data);
+            command_flag = 0;
+        }
+
+        // If UART receives 'p' char, stop bot.
+        if (command_flag == 7)
+        {
+            stop_manual(sensor_data);
+            command_flag = 0;
+        }
+
+        // If UART receives '1' char, perform 180 scan with PING sensor and Timer.
+        if (command_flag == 8)
+        {
+            command_flag = 0;
+            ping_sweep(sensor_data);
+        }
+
+        // If UART receives '2' char, perform 180 scan with IR sensor and ADC.
+        if (command_flag == 10)
+        {
+            command_flag = 0;
+            ir_sweep(sensor_data);
+        }
+
+        // If UART receives '3' char, perform 180 scan with PING and IR.
+        if (command_flag == 11)
+        {
+            command_flag = 0;
+            ir_ping_scan();
+        }
+
+        // If UART receives 'b', break from while loop.
+        if (command_flag == 9)
+        {
+            uart_sendStr("\rBreak from program.\n\r");
+            command_flag = 0;
+            break;
+        }
+
+        // If UART receives 'z', break from while loop.
+        if (command_flag == 13)
+        {
+            turn_left(sensor_data, 45)
+            uart_sendStr("\rTurn left 45\n\r");
+            command_flag = 0;
+        }
+
+        // If UART receives 'c', break from while loop.
+        if (command_flag == 14)
+        {
+            turn_right(sensor_data, 45)
+            uart_sendStr("\rTurn right 45\n\r");
+            command_flag = 0;
+        }
+    }
+    uart_sendStr("\rFree memory.\n\r");
+    oi_free(sensor_data);
+}

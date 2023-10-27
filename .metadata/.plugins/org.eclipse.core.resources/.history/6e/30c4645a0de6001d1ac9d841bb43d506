@@ -1,0 +1,81 @@
+#include <functions.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "Timer.h"
+#include "lcd.h"
+#include "open_interface.h"
+#include "uart-interrupt.h"
+#include "ping_template.h"
+#include "servo.h"
+
+/*
+ * Each scan resets angle to 90 (the middle of scan)
+ *
+ * Each left turn correlates with amount of angle to change
+ * -90 is middle
+ * -direct left is 180
+ * -direct right is 0
+ *
+ *
+ * -same with right
+ *
+ *
+ */
+
+int main(void)
+{
+    uart_interrupt_init();
+    oi_t *sensor_data = oi_alloc();  // do this only once at start of main()
+    oi_init(sensor_data);
+    timer_init();
+    // timer_init2();
+    servo_init();
+    lcd_init();
+    ping_init();
+
+    while (true)
+    {
+        char x = uart_receive();
+
+        if (command_flag == 2)
+        {
+            move_forward(sensor_data);
+        }
+        else if (command_flag == 3)
+        {
+            turn_left();
+        }
+        else if (command_flag == 4)
+        {
+            move_reverse();
+        }
+        else if (command_flag == 5)
+        {
+            turn_right();
+        }
+        else if (command_flag == 6)
+        { //'1' on keyboard ping scan
+            ping_sweep();
+        }
+        else if (command_flag == 7)
+        {
+            emergency_brake();
+        }
+        else if (command_flag == 8)
+        {
+            boost(sensor_data);
+        }
+        else if (command_flag == 9)
+        { //'2' on keyboard IR & ADC scan
+            ir_sweep();
+        }
+        else if (command_flag == 10)
+        { //'3' on keyboard IR & PING scan
+            ir_ping_scan();
+        }
+    }
+
+    oi_free(sensor_data);
+}
+

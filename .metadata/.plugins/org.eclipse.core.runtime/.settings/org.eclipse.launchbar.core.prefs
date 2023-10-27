@@ -1,0 +1,13 @@
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
+configDescList=org.eclipse.launchbar.core.descriptorType.default\:final_project3,org.eclipse.launchbar.core.descriptorType.default\:final_project2,org.eclipse.launchbar.core.descriptorType.default\:finalproject,org.eclipse.launchbar.core.descriptorType.default\:lab10,org.eclipse.launchbar.core.descriptorType.default\:lab7_demo,org.eclipse.launchbar.core.descriptorType.default\:lab7_final,org.eclipse.launchbar.core.descriptorType.default\:lab8,org.eclipse.launchbar.core.descriptorType.default\:lab9,org.eclipse.launchbar.core.descriptorType.default\:Lab1,org.eclipse.launchbar.core.descriptorType.default\:Lab2,org.eclipse.launchbar.core.descriptorType.default\:Lab3,org.eclipse.launchbar.core.descriptorType.default\:Lab10,org.eclipse.launchbar.core.descriptorType.default\: lab10,org.eclipse.launchbar.core.descriptorType.default\:PROJECT_DUSK,org.eclipse.launchbar.core.descriptorType.default\: lab4,org.eclipse.launchbar.core.descriptorType.default\: lab5,org.eclipse.launchbar.core.descriptorType.default\: lab6,org.eclipse.launchbar.core.descriptorType.default\: lab7,org.eclipse.launchbar.core.descriptorType.default\: lab8,org.eclipse.launchbar.core.descriptorType.default\: lab9,org.eclipse.launchbar.core.descriptorType.default\:Lab6_Final,org.eclipse.launchbar.core.descriptorType.default\:Lab7,org.eclipse.launchbar.core.descriptorType.default\: lab99,org.eclipse.launchbar.core.descriptorType.default\:final_project,org.eclipse.launchbar.core.descriptorType.default\:ROVER_RACERS
+eclipse.preferences.version=1
+org.eclipse.launchbar.core.descriptorType.default\:\ lab10/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:\ lab10/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:\ lab4/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:\ lab4/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:Lab1/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:Lab1/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:final_project/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:lab999/activeLaunchMode=debug

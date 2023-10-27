@@ -1,0 +1,50 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+SHELL = cmd.exe
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../Timer.c \
+../example.c \
+../i2c.c \
+../imu.c \
+../lcd.c 
+
+C_DEPS += \
+./Timer.d \
+./example.d \
+./i2c.d \
+./imu.d \
+./lcd.d 
+
+OBJS += \
+./Timer.obj \
+./example.obj \
+./i2c.obj \
+./imu.obj \
+./lcd.obj 
+
+OBJS__QUOTED += \
+"Timer.obj" \
+"example.obj" \
+"i2c.obj" \
+"imu.obj" \
+"lcd.obj" 
+
+C_DEPS__QUOTED += \
+"Timer.d" \
+"example.d" \
+"i2c.d" \
+"imu.d" \
+"lcd.d" 
+
+C_SRCS__QUOTED += \
+"../Timer.c" \
+"../example.c" \
+"../i2c.c" \
+"../imu.c" \
+"../lcd.c" 
+
+

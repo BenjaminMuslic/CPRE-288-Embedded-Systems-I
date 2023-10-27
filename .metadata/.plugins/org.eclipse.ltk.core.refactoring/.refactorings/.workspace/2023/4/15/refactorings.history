@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete 13 resources" deleteContents="false" description="Delete 13 resources" element1="/ lab10/Debug" element10="/ lab10/Timer.c" element11="/ lab10/Timer.h" element12="/ lab10/tm4c123gh6pm_startup_ccs.c" element13="/ lab10/tm4c123gh6pm.cmd" element2="/ lab10/targetConfigs" element3="/ lab10/lab9_template.c" element4="/ lab10/lcd.c" element5="/ lab10/lcd.h" element6="/ lab10/ping_template.c" element7="/ lab10/ping_template.h" element8="/ lab10/servo.c" element9="/ lab10/servo.h" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="13" stamp="1681246039053"/>
+</session>

@@ -1,0 +1,31 @@
+#include <math.h>
+
+void draw_text_polar_graph(int angle, float distance) {
+    int width = 80;
+    int height = 40;
+    char graph[height][width];
+
+    // Clear the graph
+    int i;
+    int j;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            graph[i][j] = ' ';
+        }
+    }
+
+    // Calculate x and y positions based on angle and distance
+    int x = (int) (width / 2 + (distance / 2) * cos(angle * M_PI / 180));
+    int y = (int) (height / 2 - (distance / 2) * sin(angle * M_PI / 180));
+
+    // Place a marker at the calculated position
+    graph[y][x] = '*';
+
+    // Draw the graph
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            printf("%c", graph[i][j]);
+        }
+        printf("\n");
+    }
+}

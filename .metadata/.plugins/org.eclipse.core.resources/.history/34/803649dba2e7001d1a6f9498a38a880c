@@ -1,0 +1,164 @@
+/**
+ * @file main.c
+ * @author Benjamin Muslic, Dino & Adin Huric, Manjul Balayar, Kalem Shrock
+ */
+
+#include <functions.h>
+
+#include "lcd.h"
+#include "Timer.h"
+#include "open_interface.h"
+#include "uart-interrupt.h"
+#include "ping_template.h"
+#include <time.h>
+#include <stdbool.h>
+#include "driverlib/interrupt.h"
+#include "button.h"
+#include "servo.h"
+#include "adc.h"
+#include "calibration.h"
+#include <time.h>
+#include "bno055.h"
+
+// Load a song to play during repositioning
+void load_song(void);
+void play_song(void);
+
+const int num_notes = 36;
+unsigned char notes[] = {
+    67, 69, 72, 74, 77, 79, 82, 84, 87, 89, 92, 94, // C5, D5, E5, F5, G5, A5, B5, C6, D6, E6, F6, G6
+    97, 99, 102, 104, 107, 109, 112, 114, 117, 119, 122, 124, // A6, B6, C#7, D#7, F#7, G#7, A#7, C8, D#8, F#8, G#8, A#8
+    74, 77, 79, 82 // F5, G5, A5, B5
+};
+unsigned char duration[] = {
+    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+    8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+    4, 4, 4, 4 // Whole note
+};
+
+song_index = 0;
+int main(void) {
+
+    //calibrate();
+
+    // Initialize components.
+    timer_init(); // Must be called before lcd_init(), which uses timer functions.
+    lcd_init();
+    uart_interrupt_init();
+    ping_init();
+    servo_init();
+    adc_init();
+   // raceTimer();
+   bno_t *bno = bno_alloc();
+   bno_initCalib(&bno_calibrate);
+
+   float heading;
+   bno_update(bno);
+   heading = bno->euler.heading / 16;
+
+
+
+
+    //  Allocate memory for the sensor data.
+    oi_t *sensor_data = oi_alloc();
+
+    oi_init(sensor_data); // Do this only once at start of main().
+
+    // Set robot's wheels to stop.
+    oi_setWheels(0,0);
+
+    // Loop indefinitely.
+    while (1) {
+
+        // w = forward
+        if (command_flag == 2) {
+            command_flag = move_forward(sensor_data);
+        }
+
+        // s = reverse
+        if (command_flag == 3) {
+            move_reverse(sensor_data);
+            command_flag = 0;
+        }
+
+        // a = left
+        if (command_flag == 4) {
+            turn_left(sensor_data);
+            command_flag = 0;
+        }
+
+        // d = right
+        if (command_flag == 5) {
+            turn_right(sensor_data);
+            command_flag = 0;
+        }
+
+        // r = EMERGENCY BRAKE
+        if (command_flag == 7) {
+            emergency_brake(sensor_data);
+            command_flag = 0;
+        }
+
+        // 1 = perform 180 scan with PING sensor and Timer.
+        if (command_flag == 8) {
+            command_flag = 0;
+            ping_sweep(sensor_data);
+        }
+
+        // 2 = perform 180 scan with IR sensor and ADC.
+        if (command_flag == 10) {
+           command_flag = 0;
+           ir_sweep(sensor_data);
+        }
+
+        // 3 = perform 180 scan with PING and IR.
+        if (command_flag == 11) {
+           command_flag = 0;
+           ir_ping_scan();
+        }
+
+        // b = BOOOOOST (use at own risk)
+        if (command_flag == 9)
+        {
+            command_flag = boost(sensor_data);
+        }
+
+        // p = reposition
+        if (command_flag == 12){ //reposition EAST towards destination
+
+
+            load_song();
+            command_flag = 0;
+            reposition_done = 0; // Reset the reposition_done flag
+            reposition2(sensor_data, bno);
+            timer_waitMillis(200);
+            if (reposition_done) {
+
+                play_song();
+                uart_sendStr("Repositioning...listen carefully!\n\r");
+                    }
+        }
+
+        }
+
+
+
+
+
+
+    uart_sendStr("\rFree memory.\n\r");
+    oi_free(sensor_data);
+}
+
+
+void load_song(void)
+{
+    oi_loadSong(0, num_notes, notes, duration);
+}
+
+void play_song(void)
+{
+    oi_play_song(song_index);
+    timer_waitMillis(200); // Add a small delay between each iteration to make it more realistic
+}
+

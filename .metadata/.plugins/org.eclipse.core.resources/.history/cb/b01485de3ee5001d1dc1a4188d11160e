@@ -1,0 +1,352 @@
+#include <stdio.h>
+#include <string.h>
+
+#include "Timer.h"
+#include "lcd.h"
+#include "functions.h"
+#include "open_interface.h"
+#include "uart-interrupt.h"
+#include "ping_template.h"
+#include "servo.h"
+
+//#include "uart.h"
+
+//static oi_t* sensor_data;
+
+int bump, boundary, cliff;
+
+//void initialize_system() {
+//  uart_interrupt_init();
+//  oi_t* sensor_data = oi_alloc();  // do this only once at start of main()
+//  oi_init(sensor_data);
+//  timer_init();
+//  timer_init2();
+//  servo_initalize();
+//  lcd_init();
+//  ping_initalize();
+//}
+
+void move_forward(oi_t* sensor_data) {
+    uart_sendStr("Forward \n\r");
+       oi_setWheels(100, 100);
+       int br = 0;
+
+       while (br == 0) {
+         oi_update(sensor_data);
+
+         // If UART receives key other than 'W', go back to main.
+         if (command_flag != 2) {
+           br = 1;
+            return command_flag;
+         }
+
+         else {
+           // Check for bumps.
+           bump = check_bump(sensor_data);
+
+           if (bump == 1) {
+             oi_setWheels(0, 0);
+             char* warning = ("Hit on left bumper!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (bump == 2) {
+             oi_setWheels(0, 0);
+             char* warning = ("Hit on right bumper!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           }
+
+           // Check for boundaries.
+           boundary = check_boundary(sensor_data);
+
+           if (boundary == 1) {
+             oi_setWheels(0, 0);
+             char* warning = ("Boundary line on front left side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (boundary == 2) {
+             oi_setWheels(0, 0);
+             char* warning = ("Boundary line on front right side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (boundary == 3) {
+             oi_setWheels(0, 0);
+             char* warning = ("Boundary line on left side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (boundary == 4) {
+             oi_setWheels(0, 0);
+             char* warning = ("Boundary line on right side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           }
+
+           // Check for cliffs.
+           cliff = check_cliff(sensor_data);
+
+           if (cliff == 1) {
+             oi_setWheels(0, 0);
+             char* warning = ("Cliff on front left side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (cliff == 2) {
+             oi_setWheels(0, 0);
+             char* warning = ("Cliff on front right side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (cliff == 3) {
+             oi_setWheels(0, 0);
+             char* warning = ("Cliff on left side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (cliff == 4) {
+             oi_setWheels(0, 0);
+             char* warning = ("Cliff on right side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           }
+         }
+
+       }
+     }
+
+
+void turn_left() {
+
+    uart_sendStr("Left \n\r");
+    oi_setWheels(100, -100);
+    timer_waitMillis(300);
+    oi_setWheels(0, 0);
+}
+
+void turn_right() {
+    uart_sendStr("Right \n\r");
+    oi_setWheels(-100, 100);
+    timer_waitMillis(300);
+    oi_setWheels(0, 0);
+}
+
+void move_reverse() {
+    uart_sendStr("Reverse \n\r");
+    oi_setWheels(-100, -100);
+    //timer_waitMillis(300);
+}
+
+
+void begin_scan() {
+    oi_setWheels(0, 0);
+    lcd_printf("SCANNING\n");
+    scan_for_obstacles();
+}
+
+void emergency_brake() {
+    uart_sendStr("Emergency Brake \n\r");
+    oi_setWheels(0, 0);
+    //timer_waitMillis(300);
+}
+
+void boost(oi_t* sensor_data) {
+    uart_sendStr("NITROUS ARMED \n\r");
+       oi_setWheels(500, 500);
+      // timer_waitMillis(300);
+       oi_setWheels(500, 500);
+       int br = 0;
+
+       while (br == 0) {
+         oi_update(sensor_data);
+
+         // If UART receives key other than 'W', go back to main.
+         if (command_flag != 8) {
+           br = 1;
+           return command_flag;
+         } else {
+           // Check for bumps.
+           bump = check_bump(sensor_data);
+
+           if (bump == 1) {
+             oi_setWheels(0, 0);
+             char* warning = ("Hit on left bumper!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (bump == 2) {
+             oi_setWheels(0, 0);
+             char* warning = ("Hit on right bumper!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           }
+
+           // Check for boundaries.
+           boundary = check_boundary(sensor_data);
+
+           if (boundary == 1) {
+             oi_setWheels(0, 0);
+             char* warning = ("Boundary line on front left side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (boundary == 2) {
+             oi_setWheels(0, 0);
+             char* warning = ("Boundary line on front right side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (boundary == 3) {
+             oi_setWheels(0, 0);
+             char* warning = ("Boundary line on left side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (boundary == 4) {
+             oi_setWheels(0, 0);
+             char* warning = ("Boundary line on right side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           }
+
+           // Check for cliffs.
+           cliff = check_cliff(sensor_data);
+
+           if (cliff == 1) {
+             oi_setWheels(0, 0);
+             char* warning = ("Cliff on front left side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (cliff == 2) {
+             oi_setWheels(0, 0);
+             char* warning = ("Cliff on front right side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (cliff == 3) {
+             oi_setWheels(0, 0);
+             char* warning = ("Cliff on left side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           } else if (cliff == 4) {
+             oi_setWheels(0, 0);
+             char* warning = ("Cliff on right side!\n\r");
+             uart_sendStr(warning);
+             br = 1;
+           }
+         }
+       }
+
+     }
+
+void scan_for_obstacles(void) {
+  // TODO scan obstacles without cyBOT_scan library
+  timer_waitMillis(1000);
+  int distance = -1;
+  int i = 1;
+  servo_move(1);
+  timer_waitMillis(50);
+  char data[200] = {};
+  for (i = 0; i < 180; i++) {
+    distance = scan(i);
+    // sprintf(data,"Obstacle at: %dcm %i degrees\n\r",distance,i);
+    sprintf(data, "%i:%dcm  \n\r", i, distance);
+    if (i == 90) {
+      sprintf(data, "\n\rMIDDLE:  %i:%dcm \n\r", i, distance);
+    }
+
+    uart_sendStr(data);
+  }
+}
+
+/**
+ * Check bump sensors for object collision.
+ *
+ * 0 = No bump detected
+ * 1 = Left bump
+ * 2 = Right bump
+ *
+ */
+int check_bump(oi_t* sensor_data) {
+  oi_update(sensor_data);
+
+  int bump = 0;
+
+  if (sensor_data->bumpLeft) {
+    bump = 1;
+  } else if (sensor_data->bumpRight) {
+    bump = 2;
+  } else {
+    bump = 0;
+  }
+
+  return bump;
+}
+/**
+ * Check cliff sensors for boundary lines.
+ *
+ * 0 = No boundary detected
+ * 1 = Front left detected boundary
+ * 2 = Front right detected boundary
+ * 3 = Left detected boundary
+ * 4 = Right detected boundary
+ */
+int check_boundary(oi_t* sensor_data) {
+  oi_update(sensor_data);
+
+  int boundary = 0;
+
+  if (sensor_data->cliffFrontLeftSignal > 2700) {
+    boundary = 1;
+  } else if (sensor_data->cliffFrontRightSignal > 2700) {
+    boundary = 2;
+  } else if (sensor_data->cliffLeftSignal > 2700) {
+    boundary = 3;
+  } else if (sensor_data->cliffRightSignal > 2700) {
+    boundary = 4;
+  } else {
+    boundary = 0;
+  }
+
+  return boundary;
+}
+
+/**
+ *
+ * Check cliff sensors for holes.
+ *
+ * 0 = No cliff detected
+ * 1 = Front left cliff detected
+ * 2 = Front right cliff detected
+ * 3 = Left cliff detected
+ * 4 = Right cliff detected
+ *
+ */
+int check_cliff(oi_t* sensor_data) {
+  oi_update(sensor_data);
+
+  int cliff = 0;
+
+  if (sensor_data->cliffFrontLeft) {
+    cliff = 1;
+  } else if (sensor_data->cliffFrontRight) {
+    cliff = 2;
+  } else if (sensor_data->cliffLeft) {
+    cliff = 3;
+  } else if (sensor_data->cliffRight) {
+    cliff = 4;
+  } else {
+    cliff = 0;
+  }
+
+  return cliff;
+}
+
+int scan(int angle) {
+  int distance = 0;
+  servo_move(angle);
+  timer_waitMillis(40);
+  int j = 0;
+  for (j = 0; j < 5; j++) {
+    ping_pulse_trigger();
+    distance += ping_read();
+    timer_waitMillis(15);
+  }
+
+  return distance / 10;
+}
+
+
+// Add other helper functions here
+
+

@@ -1,0 +1,578 @@
+/*
+ * @file commands.c
+ * @author
+ */
+
+#include <functions.h>
+#include "open_interface.h"
+#include "Timer.h"
+#include "lcd.h"
+#include "uart-interrupt.h"
+#include "servo.h"
+#include "ping_template.h"
+#include "adc.h"
+#include "bno055.h"
+#include "uart.h"
+#include <stdint.h>
+#include "stdint.h"
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+int reposition_done = 0;
+
+float heading;
+
+typedef struct {
+    int raw_ir;
+    double ir_dist;
+    double ping_dist;
+    int angle;
+    int num;
+} obj;
+
+int bump, boundary, cliff;
+
+/**
+ *
+ * Move Roomba forward indefinitely. Checks
+ * for boundary lines, ciffs, and object collision.
+ *
+ */
+int move_forward(oi_t *sensor_data) {
+    int bump, boundary, cliff;
+    oi_setWheels(75, 75);
+    int br = 0;
+
+    uart_sendStr("\rDriving Forward.\n\r");
+
+    while (br == 0) {
+
+         oi_update(sensor_data);
+
+         // If UART receives key other than 'W', go back to main.
+         if (command_flag != 2) {
+             br = 1;
+             return command_flag;
+         } else {
+
+            // Check for bumps.
+            bump = check_bump(sensor_data);
+
+            if (bump == 1) {
+                oi_setWheels(-50,-50);
+                timer_waitMillis(1500);
+                oi_setWheels(0,0);
+                char* warning = ("Impact detected!: Left Bumper\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (bump == 2) {
+                oi_setWheels(-50,-50);
+                timer_waitMillis(1500);
+                oi_setWheels(0,0);
+                char* warning = ("Impact detected!: Right Bumper\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            }
+
+            // Check for boundaries.
+            boundary = check_boundary(sensor_data);
+
+            if (boundary == 1) {
+                oi_setWheels(-50,-50);
+                timer_waitMillis(1500);
+                oi_setWheels(0,0);
+                char* warning = ("Boundary line detected: Front left\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (boundary == 2) {
+                oi_setWheels(-50,-50);
+                timer_waitMillis(1500);
+                oi_setWheels(0,0);
+                char* warning = ("Boundary line detected: Front right\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (boundary == 3) {
+                oi_setWheels(-50,-50);
+                timer_waitMillis(1500);
+                oi_setWheels(0,0);
+                char* warning = ("Boundary line detected: Left\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (boundary == 4) {
+                oi_setWheels(-50,-50);
+                timer_waitMillis(1500);
+                oi_setWheels(0,0);
+                char* warning = ("Boundary line detected: Right\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            }
+
+            // Check for cliffs.
+            cliff = check_cliff(sensor_data);
+
+            if (cliff == 1) {
+                oi_setWheels(-50,-50);
+                timer_waitMillis(1500);
+                oi_setWheels(0,0);
+                char* warning = ("DANGER!: Water source detected front left\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (cliff == 2) {
+                oi_setWheels(-50,-50);
+                timer_waitMillis(1500);
+                oi_setWheels(0,0);
+                char* warning = ("DANGER!: Water source detected front right\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (cliff == 3) {
+                oi_setWheels(-50,-50);
+                timer_waitMillis(1500);
+                oi_setWheels(0,0);
+                char* warning = ("DANGER!: Water source detected left\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (cliff == 4) {
+                oi_setWheels(-50,-50);
+                timer_waitMillis(1500);
+                oi_setWheels(0,0);
+                char* warning = ("DANGER!: Water source detected right\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            }
+         }
+
+         timer_waitMillis(100);
+
+
+     }
+     return 0;
+}
+
+int boost(oi_t *sensor_data)
+{
+    uart_sendStr("NITROUS ARMED \n\r");
+    int bump, boundary, cliff;
+    oi_setWheels(280,280);
+    oi_setLeds(1, 1, 255, 255);
+    int br = 0;
+    while (br == 0) {
+
+         oi_update(sensor_data);
+
+         // If UART receives key other than 'b', go back to main.
+         if (command_flag != 9) {
+             br = 1;
+             return command_flag;
+         } else {
+
+            // Check for bumps.
+            bump = check_bump(sensor_data);
+
+            if (bump == 1) {
+                oi_setWheels(0,0);
+                char* warning = ("Impact detected!: Left bumper\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (bump == 2) {
+                oi_setWheels(0,0);
+                char* warning = ("Impact detected!: Right bumper\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            }
+
+            // Check for boundaries.
+            boundary = check_boundary(sensor_data);
+
+            if (boundary == 1) {
+                oi_setWheels(0,0);
+                char* warning = ("Boundary line detected: Front left\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (boundary == 2) {
+                oi_setWheels(0,0);
+                char* warning = ("Boundary line detected: Front right\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (boundary == 3) {
+                oi_setWheels(0,0);
+                char* warning = ("Boundary line detected: Left\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (boundary == 4) {
+                oi_setWheels(0,0);
+                char* warning = ("Boundary line detected: Right\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            }
+
+            // Check for cliffs.
+            cliff = check_cliff(sensor_data);
+
+            if (cliff == 1) {
+                oi_setWheels(0,0);
+                char* warning = ("DANGER!: Water source detected front left\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (cliff == 2) {
+                oi_setWheels(0,0);
+                char* warning = ("DANGER!: Water source detected front right\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (cliff == 3) {
+                oi_setWheels(0,0);
+                char* warning = ("DANGER!: Water source detected left\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            } else if (cliff == 4) {
+                oi_setWheels(0,0);
+                char* warning = ("DANGER!: Water source detected right\n\r");
+                uart_sendStr(warning);
+                br = 1;
+            }
+         }
+
+         timer_waitMillis(100);
+
+
+     }
+     return 0;
+}
+
+
+
+void move_reverse()
+{
+    uart_sendStr("Reverse \n\r");
+    oi_setWheels(-100, -100);
+    timer_waitMillis(1000);
+    oi_setWheels(0, 0);
+}
+
+void turn_left()
+{
+    uart_sendStr("Left \n\r");
+    oi_setWheels(100, -100);
+    timer_waitMillis(300);
+    oi_setWheels(0, 0);
+}
+
+void turn_right()
+{
+    uart_sendStr("Right \n\r");
+    oi_setWheels(-100, 100);
+    timer_waitMillis(300);
+    oi_setWheels(0, 0);
+}
+
+//double turn_right(oi_t *sensor_data, double degrees){
+//    double sum = 0;
+//    char data[200] = {};
+//
+//    uart_sendStr("\rTurning to the right.\n\r");
+//
+//    while (sum > degrees) {
+//
+//        oi_setWheels(-50, 50);
+//        oi_update(sensor_data);
+//        sum += sensor_data -> angle;
+//
+//        /////////////// FIXME: DELETE LATER ////////////////
+//        sprintf(data, "Angle (in deg): %lf\n\r", sum);
+//        uart_sendStr(data);
+//        /////////////// DELETE LATER ////////////////
+//    }
+//
+//    oi_setWheels(0, 0);
+//
+//    return sum;
+//}
+
+void emergency_brake()
+{
+    uart_sendStr("Emergency Brake \n\r");
+    oi_setWheels(0, 0);
+}
+
+/**
+ * Check bump sensors for object collision.
+ *
+ * 0 = No bump detected
+ * 1 = Left bump
+ * 2 = Right bump
+ *
+ */
+int check_bump(oi_t *sensor_data) {
+    oi_update(sensor_data);
+
+    int bump = 0;
+
+    if (sensor_data -> bumpLeft) {
+        bump = 1;
+    } else if (sensor_data -> bumpRight) {
+        bump = 2;
+    } else {
+        bump = 0;
+    }
+
+    return bump;
+}
+
+/**
+ * Check cliff sensors for boundary lines.
+ *
+ * 0 = No boundary detected
+ * 1 = Front left detected boundary
+ * 2 = Front right detected boundary
+ * 3 = Left detected boundary
+ * 4 = Right detected boundary
+ */
+int check_boundary(oi_t *sensor_data) {
+    oi_update(sensor_data);
+
+    int boundary = 0;
+
+    if (sensor_data -> cliffFrontLeftSignal > 2700) {
+        boundary = 1;
+    } else if (sensor_data -> cliffFrontRightSignal > 2700) {
+        boundary = 2;
+    } else if (sensor_data -> cliffLeftSignal > 2700) {
+        boundary = 3;
+    } else if (sensor_data -> cliffRightSignal > 2700) {
+        boundary = 4;
+    } else {
+        boundary = 0;
+    }
+
+    return boundary;
+}
+
+/**
+ *
+ * Check cliff sensors for holes.
+ *
+ * 0 = No cliff detected
+ * 1 = Front left cliff detected
+ * 2 = Front right cliff detected
+ * 3 = Left cliff detected
+ * 4 = Right cliff detected
+ *
+ */
+int check_cliff(oi_t *sensor_data) {
+    oi_update(sensor_data);
+
+    int cliff = 0;
+
+    if (sensor_data -> cliffFrontLeft) {
+        cliff = 1;
+    } else if (sensor_data -> cliffFrontRight) {
+        cliff = 2;
+    } else if (sensor_data -> cliffLeft) {
+        cliff = 3;
+    } else if (sensor_data -> cliffRight) {
+        cliff = 4;
+    } else {
+        cliff = 0;
+    }
+
+    return cliff;
+}
+
+/**
+ *
+ * Complete a 180 degree sweep with IR sensor and ADC.
+ *
+ */
+void ir(oi_t *sensor_data) {
+   int angle = 0;
+   double distance;
+   char data[200] = {};
+
+   for (angle = 0; angle < 180; angle += 2) {
+       distance = ir_scan(angle);
+
+       // Throw away distances that are too far.
+       if (distance > 55.0) {
+           continue;
+       }
+
+       sprintf(data, "\rDistance (in cm): %.2lf\t\tAngle: %d\n\r", distance, angle);
+       uart_sendStr(data);
+   }
+}
+
+/**
+ *
+ * Complete a 180 degree sweep with PING sensor and Timer.
+ *
+ */
+void ping(oi_t *sensor_data) {
+    int angle = 0;
+    double distance;
+    char data[200] = {};
+
+    for (angle = 0; angle < 180; angle += 2) {
+        distance = ping_scan(angle);
+
+        // Throw away distances that are too far or overflow.
+        if (distance > 85.0) {
+            continue;
+        }
+
+        sprintf(data, "\rDistance (in cm): %.2lf\t\tAngle: %d\n\r", distance, angle);
+        uart_sendStr(data);
+    }
+}
+
+/**
+ *
+ * Scan with PING and IR sensors.
+ *
+ */
+void ir_ping_scan(void) {
+    int new_object = 1;
+    int obj_count = 0;
+    int angle = 0;
+    int beg_angle = 0;
+    int end_angle = 0;
+
+    double ping_distance;
+    double ir_distance;
+    double ping_scan_array[90] = {};
+    double ir_scan_array[90] = {};
+
+    double upperTolerance = 3;
+    double lowerTolerance = 4;
+
+    int place = 0;
+
+    int i;
+
+    double LinearWidth;
+    double input;
+
+    double ir_dist_arr[20];
+    int radial_width_arr[20];
+    double linear_width_arr[20];
+    int angle_arr[20];
+
+    char data[200] = {};
+    char objects[200] = {};
+    int anglesWithObjects[90] = {0};
+
+    for (angle = 0; angle <= 178; angle += 2) {
+        ping_distance = ping_scan(angle);
+        ir_distance = ir_scan(angle);
+        ping_scan_array[place] = ping_distance;
+        ir_scan_array[place] = ir_distance;
+        ++place;
+
+        sprintf(data, "\rPING: %.2lf\t\tIR: %.2lf\t\tAngle: %d\r\n", ping_distance, ir_distance, angle);
+        uart_sendStr(data);
+
+
+    }
+
+    //now iterate through the stored array and try to find information about objects
+
+    for(i = 0; i < 89; ++i)
+    {
+        if(fabs(ir_scan_array[i] -ir_scan_array[i+1]) <= fabs(lowerTolerance) && ir_scan_array[i] < 50)
+        {
+            //a new object is found
+            int firstAngle = i*2;
+            while(fabs(ir_scan_array[i] -ir_scan_array[i+1]) <= fabs(upperTolerance))
+            {
+                ++i;
+            }
+
+            int lastAngle = i*2;
+
+            float distanceAway = ir_scan_array[i-1];
+
+            double average = (firstAngle + lastAngle) /2;
+
+            int totalAngle = lastAngle - firstAngle;
+
+            if(totalAngle > 2)
+            {
+                timer_waitMillis(500);
+                ping_scan(average);
+                ir_scan(average);
+                timer_waitMillis(500);
+                double objectPing = ping_scan(average);
+                double objectIR = ir_scan(average);
+                timer_waitMillis(500);
+
+                input = (totalAngle/2*3.14/180);
+                LinearWidth = 2*distanceAway*(tan(input));
+
+                linear_width_arr[obj_count] = LinearWidth;
+                uart_sendStr("\n\r OBJECTS\n\r");
+                sprintf(data, "PING: %.2lf\t\tIR: %.2lf\tAverage: %lf\t\tLinear Width: %.2lf\n\r", objectPing, objectIR, average, LinearWidth);
+                uart_sendStr(data);
+
+                angle_arr[obj_count] = average;
+                radial_width_arr[obj_count] = totalAngle;
+
+                sprintf(objects, "\rObj %d. IR Dist: %lf\t\tRadial Width: %d\t\tAngle: %d\n\r", obj_count, distanceAway, radial_width_arr[obj_count], angle_arr[obj_count]);
+                uart_sendStr(objects);
+                ++obj_count;
+            }
+        }
+    }
+}
+
+
+void reposition(){
+
+
+    bno_t *bno = bno_alloc();
+    bno_initCalib(&bno_calibrate);
+
+         oi_t *oi = oi_alloc();
+         oi_init(oi);
+
+        // bno_update(bno);
+
+         float target = 0; //may vary depending on robot! make cybot 06 point east
+
+         float threshold = 1.0; // Set a threshold for the difference
+
+         while(1) {
+
+             oi_update(oi);
+             if(oi -> wheelDropLeft | oi -> wheelDropRight) {
+                 oi_setWheels(0,0);
+             }
+             else {
+                 bno_update(bno);
+
+                 float difference = remainderf(
+                         (target - (bno ->euler.heading / 16.) + 360), 360);
+                 difference = difference > 180 ? difference -360 : difference; // If diff > 180, make it negative so math works.
+                 difference *= 14; // Faster
+
+                 // Check if the difference is below the threshold
+                 if (fabs(difference) <= threshold) {
+                     reposition_done = 1;
+                     break;
+                 }
+
+
+                 //Ensure within bounds of -100, 100
+                 uint16_t power = (uint16_t) (
+                         difference < -100 ?
+                                 -100 : (difference > 100 ? 100 : difference));
+
+                 oi_setWheels(-power, power);
+             }
+             timer_waitMillis(10);
+         }
+         // Stop the wheels after repositioning
+
+            oi_setWheels(0, 0);
+}
+
+
+
+

@@ -1,0 +1,42 @@
+/*
+* @file commands.h
+* @author Halle Northway, Micale Robeson, Megan Boyd, Zach Harvey
+*/
+
+#ifndef COMMANDS_H_
+#define COMMANDS_H_
+#include "open_interface.h"
+
+double move_forward(oi_t *sensor_data, double distance_cm);
+
+int move_forward_manual(oi_t *sensor_data);
+
+double move_backward(oi_t *sensor_data, double distance_cm);
+
+void move_backward_manual(oi_t *sensor_data);
+
+double turn_left(oi_t *sensor_data, double degrees);
+
+void turn_left_manual(oi_t *sensor_data);
+
+double turn_right(oi_t *sensor_data, double degrees);
+
+void turn_right_manual(oi_t *sensor_data);
+
+void stop_manual(oi_t *sensor_data);
+
+int check_bump(oi_t *sensor_data);
+
+int check_boundary(oi_t *sensor_data);
+
+int check_cliff(oi_t *sensor_data);
+
+void ir_sweep(oi_t *sensor_data);
+
+void ping_sweep(oi_t *sensor_data);
+
+void sweep(void);
+
+double collision_detect(oi_t *sensor_data, double distance_cm, double degLeft, double degRight, double back, double lat);
+
+#endif /* COMMANDS_H_ */

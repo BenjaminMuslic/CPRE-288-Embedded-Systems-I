@@ -1,0 +1,24 @@
+/*
+ * calibration.c
+ *
+ *  Created on: Apr 19, 2023
+ *      Author: muslicb
+ */
+//don't forget to comment the other main!
+//----------------------calibration-------------------------------------------//
+#include "Timer.h"
+#include "lcd.h"
+#include "ping_template.h"
+#include "servo.h"
+
+int main(void){
+
+       button_init();
+       timer_init();
+       lcd_init();
+       servo_init();
+       servo_calibrate();
+    }
+//-------------------------------------------------------------------------------//
+
+

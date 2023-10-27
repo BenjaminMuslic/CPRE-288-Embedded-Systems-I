@@ -1,0 +1,38 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+SHELL = cmd.exe
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../example.c \
+../i2c.c \
+../imu.c 
+
+C_DEPS += \
+./example.d \
+./i2c.d \
+./imu.d 
+
+OBJS += \
+./example.obj \
+./i2c.obj \
+./imu.obj 
+
+OBJS__QUOTED += \
+"example.obj" \
+"i2c.obj" \
+"imu.obj" 
+
+C_DEPS__QUOTED += \
+"example.d" \
+"i2c.d" \
+"imu.d" 
+
+C_SRCS__QUOTED += \
+"../example.c" \
+"../i2c.c" \
+"../imu.c" 
+
+
